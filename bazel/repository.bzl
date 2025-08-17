@@ -184,3 +184,15 @@ def opentelemetry_cpp_deps():
             "https://zlib.net/zlib-1.2.13.tar.xz",
         ],
     )
+
+    # DataDog/dd-trace-cpp
+    # TODO: move to `extra_deps.bzl`
+    maybe(
+        http_archive,
+        name = "com_github_DataDog_dd_trace_cpp",
+        sha256 = "e4a0dabc3e186ce99c71685178448f93c501577102cdc50ddbf12cbaaba54713",
+        strip_prefix = "dd-trace-cpp-2.0.0",
+        urls = [
+            "https://github.com/DataDog/dd-trace-cpp/archive/v2.0.0.tar.gz",
+        ],
+    )

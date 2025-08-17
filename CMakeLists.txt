@@ -202,6 +202,8 @@ option(WITH_ZIPKIN "Whether to include the Zipkin exporter in the SDK" OFF)
 option(WITH_PROMETHEUS "Whether to include the Prometheus Client in the SDK"
        OFF)
 
+option(WITH_DATADOG "Whether to include the Datadog exporter in the SDK" OFF)
+
 option(WITH_ELASTICSEARCH
        "Whether to include the Elasticsearch Client in the SDK" OFF)
 
@@ -314,6 +316,7 @@ include(GNUInstallDirs)
 if(WITH_OTLP_HTTP
    OR WITH_ELASTICSEARCH
    OR WITH_ZIPKIN
+   OR WITH_DATADOG
    OR BUILD_W3CTRACECONTEXT_TEST
    OR WITH_EXAMPLES_HTTP)
   set(WITH_HTTP_CLIENT_CURL ON)
@@ -391,6 +394,14 @@ endif()
 
 if(WITH_OPENTRACING)
   include("${opentelemetry-cpp_SOURCE_DIR}/cmake/opentracing-cpp.cmake")
+endif()
+
+#
+# Do we need dd-trace-cpp (Datadog's SDK)?
+#
+
+if(WITH_DATADOG)
+  include("${opentelemetry-cpp_SOURCE_DIR}/cmake/dd-trace-cpp.cmake")
 endif()
 
 if(OTELCPP_MAINTAINER_MODE)
@@ -530,6 +541,7 @@ message(STATUS "WITH_OTLP_HTTP: ${WITH_OTLP_HTTP}")
 message(STATUS "WITH_OTLP_FILE: ${WITH_OTLP_FILE}")
 message(STATUS "WITH_HTTP_CLIENT_CURL: ${WITH_HTTP_CLIENT_CURL}")
 message(STATUS "WITH_ZIPKIN: ${WITH_ZIPKIN}")
+message(STATUS "WITH_DATADOG: ${WITH_DATADOG}")
 message(STATUS "WITH_PROMETHEUS: ${WITH_PROMETHEUS}")
 message(STATUS "WITH_ELASTICSEARCH: ${WITH_ELASTICSEARCH}")
 message(STATUS "WITH_OPENTRACING: ${WITH_OPENTRACING}")
@@ -615,6 +627,9 @@ endif()
 if(WITH_OPENTRACING)
   message(
     STATUS "opentracing-cpp: ${OpenTracing_VERSION} (${OpenTracing_PROVIDER})")
+endif()
+if(WITH_DATADOG)
+  message(STATUS "dd-trace-cpp: ${dd_trace_cpp_VERSION} (${dd_trace_cpp_PROVIDER})")
 endif()
 message(STATUS "---------------------------------------------")
 

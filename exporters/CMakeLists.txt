@@ -25,3 +25,7 @@ endif()
 if(WITH_ETW)
   add_subdirectory(etw)
 endif()
+
+if(WITH_DATADOG)
+  add_subdirectory(datadog)
+endif()

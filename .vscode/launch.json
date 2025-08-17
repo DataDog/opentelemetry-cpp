@@ -1,33 +1,33 @@
 {
   "version": "0.2.0",
   "configurations": [
-    {
-        "name": "(ctest) Launch",
-        "type": "cppdbg",
-        "cwd": "${cmake.testWorkingDirectory}",
-        "request": "launch",
-        "program": "${cmake.testProgram}",
-        "args": [ "${cmake.testArgs}" ],
-        // other options...
+      {
+      "name": "Debug datadog example",
+      "type": "lldb",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "./build/examples/datadog/example_datadog",
+      // "env": {
+      //   "DD_ENV":"dmehala-dev",
+      //   "DD_TRACE_AGENT_PORT": "3000",
+      //   "DD_TAGS": "env :test, aKey : aVal bKey:bVal cKey:"
+      // }
     },
-    {
-        "name": "Debug on Windows",
-        "type": "cppvsdbg",
-        "request": "launch",
-        "program": "${workspaceFolder}/build/<path-to-bin-file>",
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${workspaceFolder}",
-        "environment": [],
-        "externalConsole": false
+{
+      "name": "Debug otlp http example",
+      "type": "lldb",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "./build/examples/otlp/example_otlp_http",
+      "args": [
+        "http://localhost:4318/v1/traces",
+        "yes"
+      ]
+      // "env": {
+      //   "DD_ENV":"dmehala-dev",
+      //   "DD_TRACE_AGENT_PORT": "3000",
+      //   "DD_TAGS": "env :test, aKey : aVal bKey:bVal cKey:"
+      // }
     },
-    {
-        "name": "Debug on Linux",
-        "type": "gdb",
-        "request": "launch",
-        "target": "${workspaceFolder}/bazel-bin/<path to the bin file>",
-        "cwd": "${workspaceRoot}",
-        "valuesFormatting": "parseText"
-    }
   ]
 }
