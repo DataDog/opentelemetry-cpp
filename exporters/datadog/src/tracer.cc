@@ -2,6 +2,7 @@
 #include "opentelemetry/baggage/baggage.h"
 #include "opentelemetry/context/context.h"
 #include "opentelemetry/exporters/datadog/span.h"
+#include "opentelemetry/trace/context.h"
 
 #include <datadog/dict_reader.h>
 
@@ -153,7 +154,7 @@ nostd::shared_ptr<opentelemetry::trace::Span> Tracer::StartSpan(
   if (nostd::holds_alternative<opentelemetry::context::Context>(opts.parent))
   {
     auto context = nostd::get<opentelemetry::context::Context>(opts.parent);
-    if (context.HasKey(trace::kIsRootSpanKey))
+    if (opentelemetry::trace::IsRootSpan(context))
     {
       span = std::make_shared<Span>(tracer_.create_span(span_cfg));
     }
