@@ -83,12 +83,6 @@ Both these dependencies are listed here:
   - `libcurl` for connecting with Zipkin server over HTTP protocol.
   - `nlohmann/json` for encoding Zipkin messages.
 
-- [Datadog](/exporters/datadog)
-  exporter:
-  - [`dd-trace-cpp](https://github.com/datadog/dd-trace-cpp)
-    (v2.0.0 or later): Datadog implementation of the OpenTelemetry APIs for C++
-    - License: `Apache License 2.0`
-
 - [ETW](/exporters/etw)
   exporter:
   - `nlohmann/json` for generating MessagePack serialization for message to be

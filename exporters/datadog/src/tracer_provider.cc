@@ -23,7 +23,7 @@ nostd::shared_ptr<Tracer> TracerProvider::GetTracer(
     nostd::string_view schema_url,
     const common::KeyValueIterable *attributes) noexcept
 {
-  // TODO: When we support instrumentation scopes, we can add the attributes to the tracer.
+  // TODO: convert `attributes` to tags.
   return GetTracer(name, version, schema_url);
 }
 
@@ -34,8 +34,17 @@ nostd::shared_ptr<opentelemetry::trace::Tracer> TracerProvider::GetTracer(
     nostd::string_view version,
     nostd::string_view schema_url) noexcept
 {
-  if (tracer_impl_ == nullptr)
+  TracerKey key{
+      std::string(name),
+      std::string(version),
+      std::string(schema_url),
+  };
+
+  auto it = tracers_.find(key);
+  if (it == tracers_.cend())
   {
+    std::shared_ptr<opentelemetry::trace::Tracer> tracer_impl;
+
     // Enforce default configurations
     config_.injection_styles    = {dd::PropagationStyle::W3C};
     config_.integration_name    = "opentelemetry";
@@ -44,15 +53,17 @@ nostd::shared_ptr<opentelemetry::trace::Tracer> TracerProvider::GetTracer(
     auto finalized_config = dd::finalize_config(config_);
     if (finalized_config)
     {
-      tracer_impl_ = std::make_shared<Tracer>(*finalized_config);
+      tracer_impl = std::make_shared<Tracer>(*finalized_config);
     }
     else
     {
-      tracer_impl_ = std::make_shared<opentelemetry::trace::NoopTracer>();
+      tracer_impl = std::make_shared<opentelemetry::trace::NoopTracer>();
     }
+
+    std::tie(it, std::ignore) = tracers_.emplace(std::move(key), tracer_impl);
   }
 
-  return tracer_impl_;
+  return it->second;
 }
 
 }  // namespace datadog

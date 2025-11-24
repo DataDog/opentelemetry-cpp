@@ -7,9 +7,7 @@
 
 using namespace OPENTELEMETRY_NAMESPACE;
 
-// TODO: Update this when the Datadog tracer supports instrumentation scopes.
-// For now, regardless of the GetTracer inputs, the same tracer instance is returned.
-TEST(DatadogProvider, DifferentNameYieldTheSameTracerInstance)
+TEST(DatadogProvider, DifferentNameYieldDifferentTracerInstances)
 {
   exporter::datadog::TracerProvider provider;
   auto t1 = provider.GetTracer("t1");
@@ -17,7 +15,7 @@ TEST(DatadogProvider, DifferentNameYieldTheSameTracerInstance)
   auto t2 = provider.GetTracer("t2");
   ASSERT_TRUE(t2 != nullptr);
 
-  EXPECT_EQ(t1, t2);
+  EXPECT_NE(t1, t2);
 }
 
 TEST(DatadogProvider, SameNameYieldTheSameTracerInstance)

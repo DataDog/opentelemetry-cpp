@@ -14,10 +14,34 @@ namespace exporter
 namespace datadog
 {
 
+struct TracerKey
+{
+  std::string name;
+  std::string version;
+  std::string schema_url;
+
+  bool operator==(const TracerKey &rhs) const
+  {
+    return name == rhs.name && version == rhs.version && schema_url == rhs.schema_url;
+  }
+};
+
+struct TracerKeyHasher
+{
+  std::size_t operator()(const TracerKey &key) const noexcept
+  {
+    std::size_t hash_value = std::hash<std::string>{}(key.name);
+    hash_value ^= (std::hash<std::string>{}(key.version) << 1) >> 1;
+    hash_value ^= std::hash<std::string>{}(key.schema_url) << 2;
+    return hash_value;
+  }
+};
+
 class TracerProvider : public opentelemetry::trace::TracerProvider
 {
   TracerConfiguration config_;
-  opentelemetry::trace::Tracer tracer_impl_;
+  std::unordered_map<TracerKey, nostd::shared_ptr<opentelemetry::trace::Tracer>, TracerKeyHasher>
+      tracers_;
 
 public:
   TracerProvider() = default;
