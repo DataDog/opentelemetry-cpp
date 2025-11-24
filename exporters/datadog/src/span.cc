@@ -53,7 +53,7 @@ std::unique_ptr<opentelemetry::trace::SpanContext> make_context(
 
 }  // namespace
 
-Span::Span(::datadog::tracing::Span span) : span_(std::move(span)), context_(nullptr) {}
+Span::Span(::datadog::tracing::Span span) : span_(std::move(span)), context_(nullptr), has_ended_(false) {}
 
 void Span::SetAttribute(nostd::string_view key, const common::AttributeValue &attribute) noexcept
 {
@@ -116,6 +116,12 @@ void Span::UpdateName(nostd::string_view name) noexcept
 void Span::End(const trace::EndSpanOptions &options) noexcept
 {
   // TODO: Check if valid?
+  if (has_ended_ == true)
+  {
+    return;
+  }
+  has_ended_ = true;
+
   span_.set_end_time(options.end_steady_time);
 }
 
@@ -132,7 +138,7 @@ trace::SpanContext Span::GetContext() const noexcept
 
 bool Span::IsRecording() const noexcept
 {
-  return true;
+  return !has_ended_;
 }
 
 }  // namespace datadog
