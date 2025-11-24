@@ -64,6 +64,9 @@ public:
   // Returns true if this Span is recording tracing events (e.g. SetAttribute,
   // AddEvent).
   bool IsRecording() const noexcept override;
+
+private:
+  bool has_ended_;
 };
 
 }  // namespace datadog
