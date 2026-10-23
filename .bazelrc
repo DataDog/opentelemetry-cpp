@@ -7,8 +7,11 @@
 # Enable automatic configs based on platform
 common --enable_platform_specific_config
 
-# Make globs that don't match anything fail
-common --incompatible_disallow_empty_glob
+# Preserve Bazel 7 behavior for optional file globs under Bazel 8.
+common --incompatible_disallow_empty_glob=false
+
+# Keep the legacy non-Bzlmod CI build available on Bazel 8.
+common --enable_workspace=true
 
 # Needed by gRPC to build on some platforms.
 build --copt -DGRPC_BAZEL_BUILD
