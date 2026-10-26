@@ -1,0 +1,9 @@
+# Copyright The OpenTelemetry Authors
+# SPDX-License-Identifier: Apache-2.0
+
+# Preserve Bazel 7 behavior for optional file globs under Bazel 8.
+common --incompatible_disallow_empty_glob=false
+
+# This standalone workspace uses local repositories instead of Bzlmod.
+common --enable_workspace=true
+common --enable_bzlmod=false
